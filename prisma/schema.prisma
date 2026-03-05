@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Company {
+  id                          String    @id @default(uuid())
+  nom                         String
+  pays                        String    @default("France")
+  region                      String
+  ville                       String
+  codePostal                  String
+  siren                       String?
+  secteurActivite             String
+  tailleEffectif              String
+  caEstime                    String
+  siteWeb                     String
+  lienLinkedinEntreprise      String
+  indicateurDataMaturity      Int       @default(0)
+  notes                       String    @default("")
+  createdAt                   DateTime  @default(now())
+  updatedAt                   DateTime  @updatedAt
+  contacts                    Contact[]
+
+  @@index([region, ville])
+  @@index([secteurActivite])
+  @@index([nom])
+}
+
+model Contact {
+  id               String        @id @default(uuid())
+  entrepriseId     String
+  entreprise       Company       @relation(fields: [entrepriseId], references: [id], onDelete: Cascade)
+  nom              String
+  prenom           String
+  poste            String
+  niveauDecision   String
+  emailPro         String
+  linkedinProfil   String
+  telephone        String?
+  languePrincipale String        @default("fr")
+  notes            String        @default("")
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  lead             Lead?
+
+  @@index([entrepriseId])
+  @@index([nom, prenom])
+  @@index([emailPro])
+}
+
+model Lead {
+  id               String      @id @default(uuid())
+  contactId        String      @unique
+  contact          Contact     @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  scoreEntreprise  Int         @default(0)
+  scoreContact     Int         @default(0)
+  scoreGlobal      Int         @default(0)
+  priorite         String      @default("C")
+  statutLead       String      @default("nouveau")
+  notes            String      @default("")
+  lastScoredAt     DateTime?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([scoreGlobal, priorite])
+  @@index([statutLead])
+}
