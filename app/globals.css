@@ -1,70 +1,95 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: light;
-  --bg-start: #eff5ff;
-  --bg-end: #f8fafc;
-  --card-bg: rgba(255, 255, 255, 0.88);
-  --text-main: #0f172a;
-  --text-muted: #475569;
-  --border-soft: rgba(148, 163, 184, 0.3);
-}
-
-[data-theme="dark"] {
   color-scheme: dark;
-  --bg-start: #020617;
-  --bg-end: #0f172a;
-  --card-bg: rgba(15, 23, 42, 0.86);
-  --text-main: #e2e8f0;
-  --text-muted: #94a3b8;
-  --border-soft: rgba(51, 65, 85, 0.8);
+  --bg-main: #0a0a0a;
+  --surface: #111111;
+  --surface-elevated: #1a1a1a;
+  --border: #2a2a2a;
+  --text-main: #ededed;
+  --text-secondary: #888888;
+  --accent: #f0f0f0;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #a1a1aa;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html,
 body {
   min-height: 100vh;
+}
+
+body {
   font-family: var(--font-inter), system-ui, sans-serif;
+  background: var(--bg-main);
   color: var(--text-main);
-  background:
-    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.22), transparent 32%),
-    radial-gradient(circle at 100% 0%, rgba(45, 212, 191, 0.2), transparent 35%),
-    radial-gradient(circle at 50% 100%, rgba(251, 191, 36, 0.16), transparent 35%),
-    linear-gradient(to bottom, var(--bg-start), var(--bg-end));
+}
+
+a {
+  text-decoration-color: #3b82f6;
 }
 
 .card {
-  @apply rounded-2xl shadow-sm backdrop-blur;
-  border: 1px solid var(--border-soft);
-  background: var(--card-bg);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  @apply rounded-xl;
 }
 
 .label {
-  @apply text-xs font-semibold uppercase tracking-[0.14em];
-  color: var(--text-muted);
+  @apply text-xs uppercase tracking-widest;
+  color: #71717a;
 }
 
 .input {
-  @apply w-full rounded-xl border bg-white px-3 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20;
-  border-color: var(--border-soft);
-}
-
-.select {
-  @apply w-full rounded-xl border bg-white px-3 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20;
-  border-color: var(--border-soft);
-}
-
-.btn {
-  @apply inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50;
-}
-
-.btn-secondary {
-  @apply inline-flex items-center justify-center rounded-xl border bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100;
-  border-color: var(--border-soft);
+  @apply w-full rounded-xl border bg-[#111111] px-3 py-2.5 text-sm text-[#ededed] outline-none transition placeholder:text-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-500/50;
+  border-color: var(--border);
 }
 
 .badge {
   @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-xl border border-white bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-zinc-200;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-700;
+}
+
+.btn-danger {
+  @apply inline-flex items-center justify-center rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm font-semibold text-red-400 transition hover:bg-red-500/20;
+}
+
+.status-badge-nouveau {
+  @apply border border-zinc-700 bg-zinc-900 text-zinc-300;
+}
+
+.status-badge-a_contacter {
+  @apply border border-zinc-700 bg-zinc-800 text-zinc-200;
+}
+
+.status-badge-contacte {
+  @apply border border-blue-500/30 bg-blue-500/10 text-blue-300;
+}
+
+.status-badge-en_discussion {
+  @apply border border-violet-500/30 bg-violet-500/10 text-violet-300;
+}
+
+.status-badge-chaud {
+  @apply border border-orange-500/30 bg-orange-500/10 text-orange-300;
+}
+
+.status-badge-perdu {
+  @apply border border-red-500/30 bg-red-500/10 text-red-300;
+}
+
+.status-badge-termine {
+  @apply border border-green-500/30 bg-green-500/10 text-green-300;
 }

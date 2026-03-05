@@ -32,26 +32,26 @@ export default async function CompanyDetailsPage({
     <div className="space-y-5">
       <section className="card p-5">
         <p className="label">Entreprise</p>
-        <h2 className="mt-1 font-[var(--font-space)] text-2xl font-semibold">{company.nom}</h2>
-        <p className="mt-2 text-sm text-slate-600">
+        <h2 className="mt-1 font-[var(--font-space)] text-2xl font-semibold text-slate-100">{company.nom}</h2>
+        <p className="mt-2 text-sm text-slate-300">
           {company.ville}, {company.region} ({company.pays})
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="label">Secteur</p>
-            <p className="text-sm">{company.secteurActivite}</p>
+            <p className="text-sm text-slate-200">{company.secteurActivite}</p>
           </div>
           <div>
             <p className="label">Taille</p>
-            <p className="text-sm">{company.tailleEffectif}</p>
+            <p className="text-sm text-slate-200">{company.tailleEffectif}</p>
           </div>
           <div>
             <p className="label">CA estime</p>
-            <p className="text-sm">{company.caEstime}</p>
+            <p className="text-sm text-slate-200">{company.caEstime}</p>
           </div>
           <div>
             <p className="label">Data maturity</p>
-            <p className="text-sm">{company.indicateurDataMaturity}/3</p>
+            <p className="text-sm text-slate-200">{company.indicateurDataMaturity}/3</p>
           </div>
         </div>
         <div className="mt-4 flex flex-wrap gap-2 text-sm">
@@ -75,12 +75,12 @@ export default async function CompanyDetailsPage({
       </section>
 
       <section className="card overflow-hidden">
-        <div className="border-b border-slate-200 px-5 py-3">
-          <h3 className="font-semibold">Contacts lies</h3>
+        <div className="border-b border-slate-800 px-5 py-3">
+          <h3 className="font-semibold text-slate-100">Contacts lies</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase text-slate-500">
+            <thead className="bg-slate-900 text-xs uppercase text-slate-400">
               <tr>
                 <th className="px-3 py-2">Contact</th>
                 <th className="px-3 py-2">Poste</th>
@@ -91,16 +91,16 @@ export default async function CompanyDetailsPage({
             </thead>
             <tbody>
               {company.contacts.map((contact) => (
-                <tr key={contact.id} className="border-t border-slate-100">
+                <tr key={contact.id} className="border-t border-slate-800">
                   <td className="px-3 py-2">
-                    <Link className="font-medium hover:text-sky-700" href={`/contacts/${contact.id}`}>
+                    <Link className="font-medium text-slate-200 hover:text-cyan-300" href={`/contacts/${contact.id}`}>
                       {contact.prenom} {contact.nom}
                     </Link>
                   </td>
-                  <td className="px-3 py-2">{contact.poste}</td>
-                  <td className="px-3 py-2">{contact.lead?.scoreGlobal ?? "-"}</td>
-                  <td className="px-3 py-2">{contact.lead?.priorite ?? "-"}</td>
-                  <td className="px-3 py-2">{contact.lead?.statutLead ?? "-"}</td>
+                  <td className="px-3 py-2 text-slate-300">{contact.poste}</td>
+                  <td className="px-3 py-2 text-slate-300">{contact.lead?.scoreGlobal ?? "-"}</td>
+                  <td className="px-3 py-2 text-slate-300">{contact.lead?.priorite ?? "-"}</td>
+                  <td className="px-3 py-2 text-slate-300">{contact.lead?.statutLead ?? "-"}</td>
                 </tr>
               ))}
             </tbody>

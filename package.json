@@ -14,8 +14,11 @@
     "import-csv": "tsx scripts/importCsv.ts"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/utilities": "^3.2.2",
     "@prisma/adapter-better-sqlite3": "^7.4.2",
     "@prisma/client": "^7.4.2",
+    "@radix-ui/react-select": "^2.2.6",
     "better-sqlite3": "^12.6.2",
     "clsx": "^2.1.1",
     "csv-parse": "^6.1.0",
@@ -24,6 +27,8 @@
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "resend": "^6.9.3",
+    "sonner": "^2.0.7",
     "zod": "^4.3.6"
   },
   "devDependencies": {

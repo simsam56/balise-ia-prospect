@@ -65,7 +65,61 @@ model Lead {
   lastScoredAt     DateTime?
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
+  activities       Activity[]
+  sequenceEnrollments SequenceEnrollment[]
+  emailLogs        EmailLog[]
 
   @@index([scoreGlobal, priorite])
   @@index([statutLead])
+}
+
+model Activity {
+  id          String   @id @default(uuid())
+  leadId      String
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  titre       String
+  description String   @default("")
+  type        String
+  statut      String   @default("a_faire")
+  dueDate     DateTime
+  autoRuleKey String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([leadId, dueDate])
+  @@index([statut, dueDate])
+  @@index([autoRuleKey])
+}
+
+model SequenceEnrollment {
+  id           String   @id @default(uuid())
+  leadId        String
+  lead          Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  sequenceId    String
+  currentStep   Int      @default(0)
+  startDate     DateTime
+  nextSendDate  DateTime
+  status        String   @default("active")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([leadId, status])
+  @@index([sequenceId, status])
+  @@index([nextSendDate, status])
+}
+
+model EmailLog {
+  id         String   @id @default(uuid())
+  leadId      String
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  subject     String
+  body        String   @default("")
+  provider    String
+  status      String
+  messageId   String?
+  sentAt      DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  @@index([leadId, sentAt])
+  @@index([status, sentAt])
 }

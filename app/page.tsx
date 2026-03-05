@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { DashboardHome } from "./home/DashboardHome";
 
 export default function HomePage() {
-  redirect("/leads");
+  return <DashboardHome />;
 }

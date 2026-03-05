@@ -2,6 +2,9 @@ import { prisma } from "../lib/db";
 import { computeLeadScore } from "../lib/scoring";
 
 async function seed() {
+  await prisma.emailLog.deleteMany();
+  await prisma.sequenceEnrollment.deleteMany();
+  await prisma.activity.deleteMany();
   await prisma.lead.deleteMany();
   await prisma.contact.deleteMany();
   await prisma.company.deleteMany();
@@ -99,6 +102,8 @@ async function seed() {
     }),
   ]);
 
+  let enrollmentCreated = false;
+
   for (const contact of contacts) {
     const contactWithCompany = await prisma.contact.findUniqueOrThrow({
       where: { id: contact.id },
@@ -107,7 +112,7 @@ async function seed() {
 
     const score = computeLeadScore(contactWithCompany.entreprise, contactWithCompany);
 
-    await prisma.lead.create({
+    const lead = await prisma.lead.create({
       data: {
         contactId: contact.id,
         scoreEntreprise: score.scoreEntreprise,
@@ -119,6 +124,48 @@ async function seed() {
         lastScoredAt: new Date(),
       },
     });
+
+    await prisma.activity.create({
+      data: {
+        leadId: lead.id,
+        titre: "Appel de qualification",
+        description: "Comprendre les priorites data/IA et valider un premier cas d usage.",
+        type: "appel",
+        statut: "a_faire",
+        dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    });
+
+    if (!enrollmentCreated) {
+      const startDate = new Date();
+      startDate.setHours(9, 0, 0, 0);
+      const nextSendDate = new Date(startDate);
+      nextSendDate.setDate(nextSendDate.getDate() + 3);
+
+      await prisma.sequenceEnrollment.create({
+        data: {
+          leadId: lead.id,
+          sequenceId: "sequence-classique-14j",
+          currentStep: 1,
+          startDate,
+          nextSendDate,
+          status: "active",
+        },
+      });
+
+      await prisma.emailLog.create({
+        data: {
+          leadId: lead.id,
+          subject: "Armor Process Industrie: idee concrete IA pour accelerer vos resultats",
+          body: "Premier email seed envoye automatiquement.",
+          provider: "seed",
+          status: "sent",
+          sentAt: startDate,
+        },
+      });
+
+      enrollmentCreated = true;
+    }
   }
 
   console.log("Seed done.");

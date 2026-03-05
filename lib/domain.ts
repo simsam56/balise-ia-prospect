@@ -10,9 +10,19 @@ export const LEAD_STATUS_VALUES = [
   "chaud",
   "perdu",
 ] as const;
+export const ACTIVITY_TYPE_VALUES = [
+  "appel",
+  "email",
+  "reunion",
+  "relance",
+  "tache",
+] as const;
+export const ACTIVITY_STATUS_VALUES = ["a_faire", "termine"] as const;
 
 export type EmployeeSize = (typeof EMPLOYEE_SIZE_VALUES)[number];
 export type RevenueRange = (typeof REVENUE_RANGE_VALUES)[number];
 export type DecisionLevel = (typeof DECISION_LEVEL_VALUES)[number];
 export type LeadPriority = (typeof LEAD_PRIORITY_VALUES)[number];
 export type LeadStatus = (typeof LEAD_STATUS_VALUES)[number];
+export type ActivityType = (typeof ACTIVITY_TYPE_VALUES)[number];
+export type ActivityStatus = (typeof ACTIVITY_STATUS_VALUES)[number];

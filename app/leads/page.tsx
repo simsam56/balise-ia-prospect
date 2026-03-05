@@ -1,5 +1,5 @@
-import { LeadsBoard } from "./LeadsBoard";
+import { LeadsPageClient } from "./LeadsPageClient";
 
 export default function LeadsPage() {
-  return <LeadsBoard />;
+  return <LeadsPageClient />;
 }
