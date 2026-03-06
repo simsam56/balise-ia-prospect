@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { buildCompanyProfile } from "@/lib/company-profile";
 import { prisma } from "@/lib/db";
 import { EMPLOYEE_SIZE_VALUES, REVENUE_RANGE_VALUES } from "@/lib/domain";
 
@@ -30,6 +31,21 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const payload = createCompanySchema.parse(await request.json());
 
-  const company = await prisma.company.create({ data: payload });
+  const profile = buildCompanyProfile({
+    nom: payload.nom,
+    secteurActivite: payload.secteurActivite,
+    tailleEffectif: payload.tailleEffectif,
+    caEstime: payload.caEstime,
+    ville: payload.ville,
+    region: payload.region,
+  });
+
+  const company = await prisma.company.create({
+    data: {
+      ...payload,
+      descriptionActivite: profile.descriptionActivite,
+      motsCles: profile.motsCles,
+    },
+  });
   return NextResponse.json({ company }, { status: 201 });
 }

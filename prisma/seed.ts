@@ -1,4 +1,5 @@
 import { prisma } from "../lib/db";
+import { buildCompanyProfile } from "../lib/company-profile";
 import { computeLeadScore } from "../lib/scoring";
 
 async function seed() {
@@ -23,6 +24,14 @@ async function seed() {
         siteWeb: "https://armor-process.fr",
         lienLinkedinEntreprise: "https://www.linkedin.com/company/armor-process-industrie",
         indicateurDataMaturity: 2,
+        ...buildCompanyProfile({
+          nom: "Armor Process Industrie",
+          secteurActivite: "industrie process",
+          tailleEffectif: "50-249",
+          caEstime: "2M-10M",
+          ville: "Lorient",
+          region: "Bretagne",
+        }),
         notes: "PME rentable avec enjeux de qualite et de flux ops.",
       },
     }),
@@ -39,6 +48,14 @@ async function seed() {
         siteWeb: "https://bluebreizh.fr",
         lienLinkedinEntreprise: "https://www.linkedin.com/company/blue-breizh-commerce",
         indicateurDataMaturity: 1,
+        ...buildCompanyProfile({
+          nom: "Blue Breizh Commerce",
+          secteurActivite: "e-commerce retail",
+          tailleEffectif: "10-49",
+          caEstime: "500k-2M",
+          ville: "Vannes",
+          region: "Bretagne",
+        }),
         notes: "Volumetrie commandes en croissance.",
       },
     }),
@@ -55,6 +72,14 @@ async function seed() {
         siteWeb: "https://kerdata.fr",
         lienLinkedinEntreprise: "https://www.linkedin.com/company/ker-data-services",
         indicateurDataMaturity: 3,
+        ...buildCompanyProfile({
+          nom: "Ker Data Services",
+          secteurActivite: "services b2b data",
+          tailleEffectif: "10-49",
+          caEstime: "2M-10M",
+          ville: "Rennes",
+          region: "Bretagne",
+        }),
         notes: "Tres receptive aux sujets dashboard + automatisation.",
       },
     }),

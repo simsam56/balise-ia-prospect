@@ -13,27 +13,19 @@ export type SequenceDefinition = {
   steps: SequenceStepDefinition[];
 };
 
+export const DEFAULT_SEQUENCE_ID = "sequence-classique-14j";
+
 export const SEQUENCES: SequenceDefinition[] = [
   {
-    id: "sequence-classique-14j",
-    nom: "Sequence classique 14 jours",
-    description: "Prospection B2B en 4 emails sur 14 jours.",
+    id: DEFAULT_SEQUENCE_ID,
+    nom: "Sequence Balise-IA 14 jours",
+    description:
+      "Sequence unique: J0, J+3, J+7 et J+14 pour garder une cadence simple et soutenable.",
     steps: [
       { dayOffset: 0, type: "COLD", label: "Email 1 - prise de contact" },
-      { dayOffset: 3, type: "FOLLOW_UP", label: "Email 2 - relance contexte" },
-      { dayOffset: 7, type: "VALUE", label: "Email 3 - cas d usage" },
-      { dayOffset: 14, type: "BREAKUP", label: "Email 4 - breakup" },
-    ],
-  },
-  {
-    id: "sequence-audit-flash",
-    nom: "Sequence Audit Flash",
-    description: "Approche orientee audit data/IA rapide.",
-    steps: [
-      { dayOffset: 0, type: "COLD", label: "Email 1 - pain point operations" },
-      { dayOffset: 4, type: "VALUE", label: "Email 2 - benchmark sectoriel" },
-      { dayOffset: 9, type: "OFFER", label: "Email 3 - proposition mini audit" },
-      { dayOffset: 13, type: "BREAKUP", label: "Email 4 - dernier message" },
+      { dayOffset: 3, type: "FOLLOW_UP", label: "Email 2 - relance courte" },
+      { dayOffset: 7, type: "VALUE", label: "Email 3 - cas d usage / valeur" },
+      { dayOffset: 14, type: "BREAKUP", label: "Email 4 - dernier message" },
     ],
   },
 ];

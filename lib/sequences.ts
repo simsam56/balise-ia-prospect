@@ -15,6 +15,19 @@ export async function enrollLeadInSequence(
   startDate.setHours(9, 0, 0, 0);
   const firstStep = sequence.steps[0];
 
+  const existingEnrollment = await prisma.sequenceEnrollment.findFirst({
+    where: {
+      leadId: input.leadId,
+      sequenceId: sequence.id,
+      status: {
+        in: ["active", "paused"],
+      },
+    },
+  });
+  if (existingEnrollment) {
+    return existingEnrollment;
+  }
+
   const enrollment = await prisma.sequenceEnrollment.create({
     data: {
       leadId: input.leadId,

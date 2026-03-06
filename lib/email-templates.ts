@@ -11,6 +11,8 @@ export type LeadEmailContext = {
   secteur: string;
   ville: string;
   priorite: LeadPriority;
+  descriptionActivite?: string;
+  motsCles?: string;
 };
 
 export function buildProspectionSubject(
@@ -44,6 +46,15 @@ export function buildProspectionBody(input: {
   };
 
   const useCase = `Vu votre contexte (${lead.poste}, ${lead.secteur}, ${lead.ville}), je pense qu un mini-audit de vos flux CRM/facturation/dashboard pourrait identifier 2-3 quick wins tres concrets.`;
+  const keywords = (lead.motsCles || "")
+    .split(",")
+    .map((keyword) => keyword.trim())
+    .filter(Boolean)
+    .slice(0, 3);
+  const keywordLine =
+    keywords.length > 0
+      ? `En priorite, je vois des gains possibles sur ${keywords.join(", ")}.`
+      : "";
 
   const closeByLength: Record<EmailLength, string> = {
     court: "Ouverts a un echange de 20 min la semaine prochaine ?",
@@ -57,6 +68,9 @@ export function buildProspectionBody(input: {
     "\n\nBien a vous,\nSimon Hingant\nBalise-IA\nLorient, Bretagne";
 
   const segments = [introByTone[tone], "", contextByTone[tone], "", useCase];
+  if (keywordLine) {
+    segments.push("", keywordLine);
+  }
 
   if (length === "long") {
     segments.push(

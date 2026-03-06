@@ -1,0 +1,2 @@
+ALTER TABLE "Company" ADD COLUMN "descriptionActivite" TEXT NOT NULL DEFAULT '';
+ALTER TABLE "Company" ADD COLUMN "motsCles" TEXT NOT NULL DEFAULT '';

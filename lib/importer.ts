@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
+import { buildCompanyProfile } from "./company-profile";
 import { parseCsvText, toCsv } from "./csv";
 import { enrichCompany, enrichContact, RawCsvRow } from "./enrichment";
 import { applyColumnMapping, ColumnMapping } from "./import-mapping";
@@ -33,6 +34,14 @@ export async function importAndEnrichRows(
 
   for (const rawRow of normalizedRows) {
     const companyData = await enrichCompany(rawRow);
+    const profile = buildCompanyProfile({
+      nom: companyData.nom,
+      secteurActivite: companyData.secteurActivite,
+      tailleEffectif: companyData.tailleEffectif,
+      caEstime: companyData.caEstime,
+      ville: companyData.ville,
+      region: companyData.region,
+    });
 
     const existingCompany = await prisma.company.findFirst({
       where: {
@@ -55,10 +64,18 @@ export async function importAndEnrichRows(
             siteWeb: companyData.siteWeb,
             lienLinkedinEntreprise: companyData.lienLinkedinEntreprise,
             indicateurDataMaturity: companyData.indicateurDataMaturity,
+            descriptionActivite: profile.descriptionActivite,
+            motsCles: profile.motsCles,
             notes: companyData.notes,
           },
         })
-      : await prisma.company.create({ data: companyData });
+      : await prisma.company.create({
+          data: {
+            ...companyData,
+            descriptionActivite: profile.descriptionActivite,
+            motsCles: profile.motsCles,
+          },
+        });
 
     if (existingCompany) {
       companiesUpdated += 1;
@@ -113,8 +130,8 @@ export async function importAndEnrichRows(
 
     const score = computeLeadScore(contact.entreprise, contact);
 
-    if (contact.lead) {
-      await prisma.lead.update({
+    const lead = contact.lead
+      ? await prisma.lead.update({
         where: { id: contact.lead.id },
         data: {
           scoreEntreprise: score.scoreEntreprise,
@@ -123,9 +140,8 @@ export async function importAndEnrichRows(
           priorite: score.priorite,
           lastScoredAt: new Date(),
         },
-      });
-    } else {
-      await prisma.lead.create({
+      })
+      : await prisma.lead.create({
         data: {
           contactId: contact.id,
           scoreEntreprise: score.scoreEntreprise,
@@ -135,6 +151,28 @@ export async function importAndEnrichRows(
           lastScoredAt: new Date(),
         },
       });
+    if (!contact.emailPro.trim() || !contact.linkedinProfil.trim()) {
+      const existingDataQualityTask = await prisma.activity.findFirst({
+        where: {
+          leadId: lead.id,
+          autoRuleKey: "lead_data_completeness",
+        },
+      });
+
+      if (!existingDataQualityTask) {
+        await prisma.activity.create({
+          data: {
+            leadId: lead.id,
+            titre: "Completer les coordonnees de contact",
+            description:
+              "Verifier et completer email professionnel / profil LinkedIn pour declencher les relances automatisees.",
+            type: "tache",
+            statut: "a_faire",
+            dueDate: new Date(),
+            autoRuleKey: "lead_data_completeness",
+          },
+        });
+      }
     }
 
     leadsUpdated += 1;
@@ -150,6 +188,8 @@ export async function importAndEnrichRows(
       ca_estime: company.caEstime,
       site_web: company.siteWeb,
       linkedin_entreprise: company.lienLinkedinEntreprise,
+      description_activite: company.descriptionActivite,
+      mots_cles: company.motsCles,
       data_maturity: company.indicateurDataMaturity,
       nom_contact: contact.nom,
       prenom_contact: contact.prenom,

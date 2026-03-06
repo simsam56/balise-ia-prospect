@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "Balise-IA Prospect",
-  description: "Outil local de prospection B2B pour Balise-IA",
+  description: "Outil local de suivi commercial pour Balise-IA",
 };
 
 export default function RootLayout({
@@ -36,7 +36,7 @@ export default function RootLayout({
                 Dashboard
               </Link>
               <Link className="rounded-lg px-3 py-2 text-zinc-300 transition hover:bg-zinc-900" href="/leads">
-                Leads
+                Tableau
               </Link>
               <Link className="rounded-lg px-3 py-2 text-zinc-300 transition hover:bg-zinc-900" href="/pipeline">
                 Pipeline

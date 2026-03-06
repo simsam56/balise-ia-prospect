@@ -56,5 +56,20 @@ export async function POST(request: NextRequest) {
     },
   });
 
+  if (!contact.emailPro.trim() || !contact.linkedinProfil.trim()) {
+    await prisma.activity.create({
+      data: {
+        leadId: lead.id,
+        titre: "Completer les coordonnees de contact",
+        description:
+          "Verifier et completer email professionnel / profil LinkedIn pour declencher les relances automatisees.",
+        type: "tache",
+        statut: "a_faire",
+        dueDate: new Date(),
+        autoRuleKey: "lead_data_completeness",
+      },
+    });
+  }
+
   return NextResponse.json({ contact, lead }, { status: 201 });
 }

@@ -32,6 +32,8 @@ type LeadOption = {
       nom: string;
       secteurActivite: string;
       ville: string;
+      descriptionActivite: string;
+      motsCles: string;
     };
   };
 };
@@ -70,6 +72,8 @@ export function EmailGeneratorClient() {
         secteur: lead.contact.entreprise.secteurActivite,
         ville: lead.contact.entreprise.ville,
         priorite: lead.priorite,
+        descriptionActivite: lead.contact.entreprise.descriptionActivite,
+        motsCles: lead.contact.entreprise.motsCles,
       },
       tone,
       length,

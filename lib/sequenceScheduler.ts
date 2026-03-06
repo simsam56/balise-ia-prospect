@@ -81,6 +81,8 @@ export async function processSequences(prisma: PrismaClient): Promise<{
       secteur: enrollment.lead.contact.entreprise.secteurActivite,
       ville: enrollment.lead.contact.entreprise.ville,
       priorite: enrollment.lead.priorite as "A" | "B" | "C",
+      descriptionActivite: enrollment.lead.contact.entreprise.descriptionActivite,
+      motsCles: enrollment.lead.contact.entreprise.motsCles,
     };
 
     const baseSubject = buildProspectionSubject(
@@ -93,6 +95,21 @@ export async function processSequences(prisma: PrismaClient): Promise<{
       tone: "consulting",
       length: "moyen",
     });
+
+    if (!enrollment.lead.contact.emailPro.trim()) {
+      failed += 1;
+      await prisma.emailLog.create({
+        data: {
+          leadId: enrollment.leadId,
+          subject,
+          body,
+          provider: "resend",
+          status: "failed_no_email",
+          sentAt: new Date(),
+        },
+      });
+      continue;
+    }
 
     try {
       const result = await sendEmailViaResend({

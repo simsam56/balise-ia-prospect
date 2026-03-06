@@ -40,6 +40,12 @@ export async function POST(request: NextRequest) {
     if (!lead) {
       return NextResponse.json({ error: "Lead introuvable." }, { status: 404 });
     }
+    if (!lead.contact.emailPro.trim()) {
+      return NextResponse.json(
+        { error: "Email professionnel manquant pour ce contact." },
+        { status: 400 },
+      );
+    }
 
     const context = {
       prenom: lead.contact.prenom,
@@ -49,6 +55,8 @@ export async function POST(request: NextRequest) {
       secteur: lead.contact.entreprise.secteurActivite,
       ville: lead.contact.entreprise.ville,
       priorite: lead.priorite as "A" | "B" | "C",
+      descriptionActivite: lead.contact.entreprise.descriptionActivite,
+      motsCles: lead.contact.entreprise.motsCles,
     };
 
     const subject =

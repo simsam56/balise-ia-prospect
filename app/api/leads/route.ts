@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { buildCompanyProfile } from "@/lib/company-profile";
 import { buildLeadWhere, normalizeLeadFilters } from "@/lib/lead-filters";
 import { prisma } from "@/lib/db";
 import { LEAD_STATUS_VALUES } from "@/lib/domain";
@@ -12,7 +13,15 @@ const createLeadSchema = z.object({
   poste: z.string().min(2).max(120).default("Dirigeant"),
   ville: z.string().min(2).max(120),
   secteur: z.string().min(2).max(120),
-  email: z.string().email(),
+  email: z
+    .string()
+    .trim()
+    .optional()
+    .default("")
+    .refine(
+      (value) => !value || /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(value),
+      "Email invalide",
+    ),
   notes: z.string().max(5000).optional(),
 });
 
@@ -125,6 +134,14 @@ export async function POST(request: NextRequest) {
   try {
     const payload = createLeadSchema.parse(await request.json());
     const { prenom, nom } = splitFullName(payload.contact);
+    const profile = buildCompanyProfile({
+      nom: payload.entreprise,
+      secteurActivite: payload.secteur,
+      tailleEffectif: "10-49",
+      caEstime: "500k-2M",
+      ville: payload.ville,
+      region: "Bretagne",
+    });
 
     const existingCompany = await prisma.company.findFirst({
       where: {
@@ -133,9 +150,16 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const company =
-      existingCompany ||
-      (await prisma.company.create({
+    const company = existingCompany
+      ? await prisma.company.update({
+          where: { id: existingCompany.id },
+          data: {
+            secteurActivite: payload.secteur,
+            descriptionActivite: existingCompany.descriptionActivite || profile.descriptionActivite,
+            motsCles: existingCompany.motsCles || profile.motsCles,
+          },
+        })
+      : await prisma.company.create({
         data: {
           nom: payload.entreprise,
           pays: "France",
@@ -148,9 +172,11 @@ export async function POST(request: NextRequest) {
           siteWeb: "",
           lienLinkedinEntreprise: "",
           indicateurDataMaturity: 1,
+          descriptionActivite: profile.descriptionActivite,
+          motsCles: profile.motsCles,
           notes: payload.notes || "",
         },
-      }));
+      });
 
     const contact = await prisma.contact.create({
       data: {
@@ -190,6 +216,21 @@ export async function POST(request: NextRequest) {
         },
       },
     });
+
+    if (!contact.linkedinProfil.trim() || !contact.emailPro.trim()) {
+      await prisma.activity.create({
+        data: {
+          leadId: lead.id,
+          titre: "Completer les coordonnees de contact",
+          description:
+            "Verifier et completer email professionnel / profil LinkedIn pour declencher les relances automatisees.",
+          type: "tache",
+          statut: "a_faire",
+          dueDate: new Date(),
+          autoRuleKey: "lead_data_completeness",
+        },
+      });
+    }
 
     return NextResponse.json({ lead }, { status: 201 });
   } catch (error) {

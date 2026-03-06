@@ -20,6 +20,8 @@ model Company {
   siteWeb                     String
   lienLinkedinEntreprise      String
   indicateurDataMaturity      Int       @default(0)
+  descriptionActivite         String    @default("")
+  motsCles                    String    @default("")
   notes                       String    @default("")
   createdAt                   DateTime  @default(now())
   updatedAt                   DateTime  @updatedAt

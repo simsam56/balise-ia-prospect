@@ -53,9 +53,9 @@ npm run import-csv -- ./data/leads.csv
 - `/` Dashboard cockpit (KPI + prochaines actions + quick add lead)
 - `/leads` Table leads (filtres, score bar, séquences, menu actions)
 - `/pipeline` Kanban drag-and-drop (dnd-kit)
-- `/activities` Tâches / interactions
+- `/activities` Complétude base (contact/email/LinkedIn) + tâches
 - `/emails` Générateur + envoi immédiat
-- `/sequences` Séquences actives (enrollment/pause/reprise/stop + simulate cron en dev)
+- `/sequences` Séquence unique 14 jours (enrollment/pause/reprise/stop + simulate cron en dev)
 - `/import` Import CSV (mapping + preview + docs format)
 - `/api-docs` Documentation API lisible
 
@@ -101,6 +101,7 @@ npm run import-csv -- ./data/leads.csv
 ## Données Prisma (V2)
 
 - `Company`
+  - inclut `descriptionActivite` + `motsCles` auto-générés
 - `Contact`
 - `Lead`
 - `Activity`

@@ -59,5 +59,5 @@ PAGES NAVIGABLES:
 /import → Import CSV en masse
 
 STATUTS LEAD POSSIBLES: nouveau, a_contacter, contacte, en_discussion, chaud, perdu
-SÉQUENCES DISPONIBLES: "sequence-classique-14j", "sequence-audit-flash"
+SÉQUENCES DISPONIBLES: "sequence-classique-14j"
 `;
